@@ -1,6 +1,6 @@
 # pylint: disable=unused-argument, duplicate-code
 from typing import Sequence
-from power_grid.simple_types import Resource
+from power_grid.simple_types import Resource, PlayerColor, PowerPlantNumber
 
 
 class InterfaceResourcePoolResourceMarket:
@@ -31,4 +31,19 @@ class InterfaceCheckAndBumpStepTowns:
 
 class InterfaceCheckAndBumpStepPowerPlantMarket:
     def is_step3_start(self) -> bool:
+        assert False
+
+class InterfaceDeterminePlayerOrderTowns:
+    def get_number_of_houses(self, player: PlayerColor) -> int:
+        assert False
+
+
+class InterfaceDeterminePlayerOrderPlayerBoard:
+    def best_power_plant_number(self) -> PowerPlantNumber:
+        assert False
+
+    def outstanding_money(self) -> int:
+        assert False
+
+    def number_of_connectable_cities(self) -> int:
         assert False
