@@ -47,3 +47,10 @@ class InterfaceDeterminePlayerOrderPlayerBoard:
 
     def number_of_connectable_cities(self) -> int:
         assert False
+
+class InterfaceBuyingResourcesResourceMarket:
+    def get_price(self, desired: list[Resource]) -> int | None:
+        assert False
+
+    def take_resources(self, resources: list[Resource]) -> None:
+        assert False

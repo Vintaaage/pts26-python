@@ -3,10 +3,12 @@ import json
 from collections import Counter
 from typing import Mapping, Sequence, Any
 from power_grid.simple_types import Resource
-from power_grid.interfaces import InterfaceResourcePoolResourceMarket
+from power_grid.interfaces import (InterfaceResourcePoolResourceMarket,
+                                   InterfaceStepListener,
+                                   InterfaceBuyingResourcesResourceMarket)
 
 
-class ResourceMarket:
+class ResourceMarket(InterfaceStepListener, InterfaceBuyingResourcesResourceMarket):
     _step: int
     _resources: dict[Resource, int]
     _pool: InterfaceResourcePoolResourceMarket
