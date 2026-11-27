@@ -1,6 +1,6 @@
 # pylint: disable=unused-argument, duplicate-code
 from typing import Sequence
-from power_grid.simple_types import Resource, PlayerColor, PowerPlantNumber
+from power_grid.simple_types import (Resource, PlayerColor, PowerPlantNumber, RequestError)
 
 
 class InterfaceResourcePoolResourceMarket:
@@ -75,4 +75,17 @@ class InterfaceBureaucracyResourceMarket:
 
 class InterfaceBureaucracyPowerPlantMarket:
     def prepare_next_turn(self) -> None:
+        assert False
+
+class InterfaceBuildingHousesTowns:
+    def buy_houses(self, player: PlayerColor, town_names: Sequence[str],
+                   max_money: int) -> int | RequestError:
+        assert False
+
+    def get_max_number_of_houses(self) -> int:
+        assert False
+
+
+class InterfaceBuildingHousesPowerPlantMarket:
+    def remove_power_plants_up_to(self, value: int) -> None:
         assert False
