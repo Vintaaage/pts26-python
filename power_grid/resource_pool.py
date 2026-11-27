@@ -2,11 +2,12 @@ import json
 from collections import Counter
 from typing import Sequence
 
-from power_grid.interfaces import InterfaceResourcePoolResourceMarket
+from power_grid.interfaces import (InterfaceResourcePoolResourceMarket,
+                                   InterfaceBureaucracyResourcePool)
 from power_grid.simple_types import Resource
 
 
-class ResourcePool(InterfaceResourcePoolResourceMarket):
+class ResourcePool(InterfaceResourcePoolResourceMarket, InterfaceBureaucracyResourcePool):
     _resources: dict[Resource, int]
 
     def __init__(self, resources: Sequence[Resource] = ()):
