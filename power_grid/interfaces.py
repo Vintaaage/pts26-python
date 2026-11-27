@@ -54,3 +54,25 @@ class InterfaceBuyingResourcesResourceMarket:
 
     def take_resources(self, resources: list[Resource]) -> None:
         assert False
+
+class InterfaceBureaucracyTowns:
+    def get_number_of_houses(self, player: PlayerColor) -> int:
+        assert False
+
+    def get_max_number_of_houses(self) -> int:
+        assert False
+
+
+class InterfaceBureaucracyResourcePool:
+    def put_resources(self, resources: Sequence[Resource]) -> None:
+        assert False
+
+
+class InterfaceBureaucracyResourceMarket:
+    def refill(self) -> None:
+        assert False
+
+
+class InterfaceBureaucracyPowerPlantMarket:
+    def prepare_next_turn(self) -> None:
+        assert False

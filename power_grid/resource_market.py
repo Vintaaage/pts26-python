@@ -5,10 +5,13 @@ from typing import Mapping, Sequence, Any
 from power_grid.simple_types import Resource
 from power_grid.interfaces import (InterfaceResourcePoolResourceMarket,
                                    InterfaceStepListener,
-                                   InterfaceBuyingResourcesResourceMarket)
+                                   InterfaceBuyingResourcesResourceMarket,
+                                   InterfaceBureaucracyResourceMarket)
 
 
-class ResourceMarket(InterfaceStepListener, InterfaceBuyingResourcesResourceMarket):
+class ResourceMarket(InterfaceStepListener,
+                     InterfaceBuyingResourcesResourceMarket,
+                     InterfaceBureaucracyResourceMarket):
     _step: int
     _resources: dict[Resource, int]
     _pool: InterfaceResourcePoolResourceMarket
