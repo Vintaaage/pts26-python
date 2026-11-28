@@ -87,13 +87,13 @@ class TestCheckAndBumpStep(unittest.TestCase):
         self.market.step3_start = True
         self.step.check_and_bump_to_step3()
         self.step.check_and_bump_to_step3()
-        self.assertEqual(self.first.calls, ["step3"])
+        self.assertEqual(self.first.calls, ["step2", "step3"])
 
-    def test_step3_can_skip_step2(self) -> None:
+    def test_step3_before_step2_performs_both_changes(self) -> None:
         self.market.step3_start = True
         self.step.check_and_bump_to_step3()
         self.assertEqual(self.step.get_step(), 3)
-        self.assertEqual(self.first.calls, ["step3"])
+        self.assertEqual(self.first.calls, ["step2", "step3"])
 
     def test_no_step2_after_step3(self) -> None:
         self.market.step3_start = True
@@ -101,8 +101,7 @@ class TestCheckAndBumpStep(unittest.TestCase):
         self.towns.max_houses = 10
         self.step.check_and_bump_to_step2()
         self.assertEqual(self.step.get_step(), 3)
-        self.assertEqual(self.first.calls, ["step3"])
-
+        self.assertEqual(self.first.calls, ["step2", "step3"])
 
 if __name__ == "__main__":
     unittest.main()

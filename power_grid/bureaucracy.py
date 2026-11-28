@@ -14,23 +14,18 @@ class Bureaucracy:
     _resource_pool: InterfaceBureaucracyResourcePool
     _resource_market: InterfaceBureaucracyResourceMarket
     _power_plant_market: InterfaceBureaucracyPowerPlantMarket
-    _houses_to_end_game: int
     _pending: list[PlayerColor]
 
-    def __init__( # pylint: disable=too-many-arguments,too-many-positional-arguments
-            self, boards: Mapping[PlayerColor, PlayerBoardFacade],
-            towns: InterfaceBureaucracyTowns,
-            resource_pool: InterfaceBureaucracyResourcePool,
-            resource_market: InterfaceBureaucracyResourceMarket,
-            power_plant_market: InterfaceBureaucracyPowerPlantMarket,
-            houses_to_end_game: int):
-        assert houses_to_end_game > 0
+    def __init__(self, boards: Mapping[PlayerColor, PlayerBoardFacade],
+                 towns: InterfaceBureaucracyTowns,
+                 resource_pool: InterfaceBureaucracyResourcePool,
+                 resource_market: InterfaceBureaucracyResourceMarket,
+                 power_plant_market: InterfaceBureaucracyPowerPlantMarket):
         self._boards = dict(boards)
         self._towns = towns
         self._resource_pool = resource_pool
         self._resource_market = resource_market
         self._power_plant_market = power_plant_market
-        self._houses_to_end_game = houses_to_end_game
         self._pending = []
 
     def start_phase(self, player_order: Sequence[PlayerColor]) -> None:
@@ -62,8 +57,6 @@ class Bureaucracy:
         })
 
     def _finish_phase(self) -> PhaseStatus:
-        if self._towns.get_max_number_of_houses() >= self._houses_to_end_game:
-            return PhaseStatus.GAME_ENDS
         self._resource_market.refill()
         self._power_plant_market.prepare_next_turn()
         return PhaseStatus.PHASE_ENDS
