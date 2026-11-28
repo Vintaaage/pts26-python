@@ -1,7 +1,6 @@
 import json
 from typing import Mapping, Sequence
-from power_grid.interfaces import (
-    InterfaceBuildingHousesTowns, InterfaceBuildingHousesPowerPlantMarket)
+from power_grid.interfaces import InterfaceBuildingHousesTowns
 from power_grid.player_board_facade import PlayerBoardFacade
 from power_grid.reverse_order_phase import ReverseOrderPhase
 from power_grid.simple_types import PhaseStatus, PlayerColor, RequestError
@@ -9,16 +8,17 @@ from power_grid.simple_types import PhaseStatus, PlayerColor, RequestError
 
 class BuildingHouses(ReverseOrderPhase):
     _towns: InterfaceBuildingHousesTowns
-    _power_plant_market: InterfaceBuildingHousesPowerPlantMarket
     _boards: dict[PlayerColor, PlayerBoardFacade]
+    _houses_to_end_game: int
 
     def __init__(self, towns: InterfaceBuildingHousesTowns,
-                 power_plant_market: InterfaceBuildingHousesPowerPlantMarket,
-                 boards: Mapping[PlayerColor, PlayerBoardFacade]):
+                 boards: Mapping[PlayerColor, PlayerBoardFacade],
+                 houses_to_end_game: int):
+        assert houses_to_end_game > 0
         super().__init__(boards.keys())
         self._towns = towns
-        self._power_plant_market = power_plant_market
         self._boards = dict(boards)
+        self._houses_to_end_game = houses_to_end_game
 
     def buy_houses(self, player: PlayerColor,
                    town_names: Sequence[str]) -> PhaseStatus | RequestError:
@@ -33,9 +33,10 @@ class BuildingHouses(ReverseOrderPhase):
                 return cost
             board.spend_money(cost)
         status = self._finish_turn()
-        if status == PhaseStatus.PHASE_ENDS:
-            self._power_plant_market.remove_power_plants_up_to(
-                self._towns.get_max_number_of_houses())
+        if (status == PhaseStatus.PHASE_ENDS and
+                self._towns.get_max_number_of_houses()
+                >= self._houses_to_end_game):
+            return PhaseStatus.GAME_ENDS
         return status
 
     def get_state(self) -> str:

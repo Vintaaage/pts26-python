@@ -43,6 +43,8 @@ class CheckAndBumpStep:
             listener.start_step2()
 
     def _start_step3(self) -> None:
+        if self._step == 1:
+            self._start_step2()
         self._step = 3
         for listener in self._listeners:
             listener.start_step3()

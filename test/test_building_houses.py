@@ -3,8 +3,7 @@ import unittest
 from typing import Any, Sequence
 
 from power_grid.building_houses import BuildingHouses
-from power_grid.interfaces import (
-    InterfaceBuildingHousesTowns, InterfaceBuildingHousesPowerPlantMarket)
+from power_grid.interfaces import InterfaceBuildingHousesTowns
 from power_grid.player_board_facade import PlayerBoardFacade
 from power_grid.simple_types import PhaseStatus, PlayerColor, RequestError
 
@@ -32,22 +31,11 @@ class TownsFake(InterfaceBuildingHousesTowns):
         return self.max_houses
 
 
-class PowerPlantMarketFake(InterfaceBuildingHousesPowerPlantMarket):
-    removed_up_to: list[int]
-
-    def __init__(self) -> None:
-        self.removed_up_to = []
-
-    def remove_power_plants_up_to(self, value: int) -> None:
-        self.removed_up_to.append(value)
-
-
 class TestBuildingHouses(unittest.TestCase):
     def setUp(self) -> None:
         self.towns = TownsFake()
-        self.market = PowerPlantMarketFake()
         self.boards = {x: PlayerBoardFacade(x) for x in (RED, BLUE, GREEN)}
-        self.phase = BuildingHouses(self.towns, self.market, self.boards)
+        self.phase = BuildingHouses(self.towns, self.boards, 17)
         self.phase.start_phase([RED, BLUE, GREEN])
 
     def test_last_player_builds_first(self) -> None:
@@ -78,18 +66,24 @@ class TestBuildingHouses(unittest.TestCase):
         self.assertEqual(self.phase.current_player(), GREEN)
 
     def test_phase_ends_after_the_first_player(self) -> None:
-        self.phase.buy_houses(GREEN, [])
-        self.phase.buy_houses(BLUE, [])
-        self.assertEqual(self.market.removed_up_to, [])
-        self.towns.max_houses = 7
+        self.assertEqual(self.phase.buy_houses(GREEN, []),
+                         PhaseStatus.PHASE_CONTINUES)
+        self.assertEqual(self.phase.buy_houses(BLUE, []),
+                         PhaseStatus.PHASE_CONTINUES)
         self.assertEqual(self.phase.buy_houses(RED, ["Berlin"]),
                          PhaseStatus.PHASE_ENDS)
-        self.assertEqual(self.market.removed_up_to, [7])
         self.assertIsNone(self.phase.current_player())
         self.assertIsInstance(self.phase.buy_houses(RED, []), RequestError)
 
+    def test_game_ends_when_a_player_has_enough_houses(self) -> None:
+        self.towns.max_houses = 17
+        self.phase.buy_houses(GREEN, [])
+        self.phase.buy_houses(BLUE, [])
+        self.assertEqual(self.phase.buy_houses(RED, []),
+                         PhaseStatus.GAME_ENDS)
+
     def test_not_active_before_start(self) -> None:
-        phase = BuildingHouses(self.towns, self.market, self.boards)
+        phase = BuildingHouses(self.towns, self.boards, 17)
         self.assertIsInstance(phase.buy_houses(RED, []), RequestError)
 
     def test_state(self) -> None:

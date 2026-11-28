@@ -59,10 +59,6 @@ class InterfaceBureaucracyTowns:
     def get_number_of_houses(self, player: PlayerColor) -> int:
         assert False
 
-    def get_max_number_of_houses(self) -> int:
-        assert False
-
-
 class InterfaceBureaucracyResourcePool:
     def put_resources(self, resources: Sequence[Resource]) -> None:
         assert False
@@ -83,9 +79,4 @@ class InterfaceBuildingHousesTowns:
         assert False
 
     def get_max_number_of_houses(self) -> int:
-        assert False
-
-
-class InterfaceBuildingHousesPowerPlantMarket:
-    def remove_power_plants_up_to(self, value: int) -> None:
         assert False

@@ -27,9 +27,6 @@ class TownsFake(InterfaceBureaucracyTowns):
     def get_number_of_houses(self, player: PlayerColor) -> int:
         return self.houses[player]
 
-    def get_max_number_of_houses(self) -> int:
-        return max(self.houses.values())
-
 
 class PoolFake(InterfaceBureaucracyResourcePool):
     received: list[Resource]
@@ -72,7 +69,7 @@ class TestBureaucracy(unittest.TestCase):
         self.boards[RED].buy_resources(3 * [COAL])
         self.bureaucracy = Bureaucracy(
             self.boards, self.towns, self.pool, self.resource_market,
-            self.plant_market, 17)
+            self.plant_market)
         self.bureaucracy.start_phase([RED, BLUE])
 
     def test_using_a_power_plant_pays_income_and_burns_resources(self) -> None:
@@ -117,18 +114,10 @@ class TestBureaucracy(unittest.TestCase):
         self.assertEqual(self.resource_market.refills, 1)
         self.assertEqual(self.plant_market.prepared, 1)
 
-    def test_game_ends_when_a_player_has_enough_houses(self) -> None:
-        self.towns.houses[BLUE] = 17
-        self.bureaucracy.use_power_plants(RED, [], [])
-        self.assertEqual(self.bureaucracy.use_power_plants(BLUE, [], []),
-                         PhaseStatus.GAME_ENDS)
-        self.assertEqual(self.resource_market.refills, 0)
-        self.assertEqual(self.plant_market.prepared, 0)
-
     def test_not_active_before_start(self) -> None:
         bureaucracy = Bureaucracy(
             self.boards, self.towns, self.pool, self.resource_market,
-            self.plant_market, 17)
+            self.plant_market)
         self.assertIsInstance(
             bureaucracy.use_power_plants(RED, [], []), RequestError)
 
